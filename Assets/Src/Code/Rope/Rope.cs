@@ -1,44 +1,65 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using Assets.Src.Code.Controllers;
+using UnityEngine;
 
 namespace Assets.Src.Code.Rope
 {
     public class Rope : MonoBehaviour
     {
-        [SerializeField] private Sprite _greenRope, _redRope;
         [SerializeField] private Knot[] _knot;
-        private Image _ropeImage;
-
-        private void Awake()
-        {
-            _ropeImage = GetComponent<Image>();
-        }
+        [SerializeField] private SpriteRenderer _ropeSprite;
+        private int _collideCounter = 0;
 
         private void Start()
         {
+            for (int i = 0; i < _knot.Length; i++)
+                _knot[i].AddRopeToList(this);
+
+            RopeController.Instance.OnRopeEndDragHandler += OnEndDragRopeAction;
             StretchRope();
+        }
+
+        public void SetKnots(Knot first, Knot second)
+        {
+            _knot[0] = first;
+            _knot[1] = second;
+            gameObject.SetActive(true);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Debug.Log(collision);
+            if (collision.TryGetComponent(out Rope rope))
+            {
+                _collideCounter++;
+                Debug.Log("collider");
+            }
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void OnTriggerExit2D(Collider2D collision)
         {
-            Debug.Log(collision);
+            if (collision.TryGetComponent(out Rope rope))
+                _collideCounter--;
+        }
+
+        private void OnEndDragRopeAction()
+        {
+            if (_collideCounter == 0)
+                _ropeSprite.sprite = RopeController.Instance.GreenRope;
+            else _ropeSprite.sprite = RopeController.Instance.RedRope;
         }
 
         public void StretchRope()
         {
-            Debug.Log("stretch");
-            float distance = Vector2.Distance(_knot[0].transform.position, _knot[1].transform.position) / 100;
-
+            float distance = Vector2.Distance(_knot[0].transform.position, _knot[1].transform.position) * 1.1f;
             transform.localScale = new Vector3(distance, transform.localScale.y, transform.localScale.z);
 
             Vector2 direction = _knot[1].transform.position - _knot[0].transform.position;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.SetPositionAndRotation((_knot[0].transform.position + _knot[1].transform.position) / 2, Quaternion.Euler(0, 0, angle));
+        }
+
+        private void OnDestroy()
+        {
+            RopeController.Instance.OnRopeEndDragHandler -= OnEndDragRopeAction;
         }
     }
 }

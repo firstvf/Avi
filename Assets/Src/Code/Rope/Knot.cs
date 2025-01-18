@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Assets.Src.Code.Controllers;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Assets.Src.Code.Rope
@@ -6,7 +8,12 @@ namespace Assets.Src.Code.Rope
     public class Knot : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         [SerializeField] private GameObject _shadow;
-        [SerializeField] private Rope _rope;
+        private readonly List<Rope> _ropeList = new();
+
+        public void AddRopeToList(Rope rope)
+        {
+            _ropeList.Add(rope);
+        }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
@@ -16,12 +23,15 @@ namespace Assets.Src.Code.Rope
         public void OnEndDrag(PointerEventData eventData)
         {
             _shadow.gameObject.SetActive(false);
+            RopeController.Instance.OnRopeEndDragHandler?.Invoke();
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            transform.position = eventData.position;
-            _rope.StretchRope();
+            transform.position = eventData.pointerCurrentRaycast.worldPosition;
+
+            foreach (var rope in _ropeList)
+                rope.StretchRope();
         }
     }
 }
