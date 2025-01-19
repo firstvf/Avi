@@ -1,5 +1,4 @@
-﻿using Assets.Src.Code.Rope;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Assets.Src.Code.Controllers
@@ -26,7 +25,7 @@ namespace Assets.Src.Code.Controllers
         private void Start()
         {
             FakeStart();
-            Invoke(nameof(FakeStart), 0.1f);
+            Invoke(nameof(FakeStart), 0.05f);
         }
 
         private void FakeStart()

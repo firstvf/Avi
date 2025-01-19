@@ -18,20 +18,10 @@ namespace Assets.Src.Code.Rope
             StretchRope();
         }
 
-        public void SetKnots(Knot first, Knot second)
-        {
-            _knot[0] = first;
-            _knot[1] = second;
-            gameObject.SetActive(true);
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.TryGetComponent(out Rope rope))
-            {
                 _collideCounter++;
-                Debug.Log("collider");
-            }
         }
 
         private void OnTriggerExit2D(Collider2D collision)

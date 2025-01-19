@@ -5,26 +5,19 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Src.Code.Rope
 {
-    public class Knot : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class Knot : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private GameObject _shadow;
         private readonly List<Rope> _ropeList = new();
 
         public void AddRopeToList(Rope rope)
-        {
-            _ropeList.Add(rope);
-        }
+        => _ropeList.Add(rope);
 
         public void OnBeginDrag(PointerEventData eventData)
-        {
-            _shadow.gameObject.SetActive(true);
-        }
+        => SoundController.Instance.StretchSound();
 
         public void OnEndDrag(PointerEventData eventData)
-        {
-            _shadow.gameObject.SetActive(false);
-            RopeController.Instance.OnRopeEndDragHandler?.Invoke();
-        }
+        => RopeController.Instance.OnRopeEndDragHandler?.Invoke();
 
         public void OnDrag(PointerEventData eventData)
         {
@@ -33,5 +26,14 @@ namespace Assets.Src.Code.Rope
             foreach (var rope in _ropeList)
                 rope.StretchRope();
         }
+
+        public void OnPointerDown(PointerEventData eventData)
+        => SoundController.Instance.ClickSound();
+
+        public void OnPointerEnter(PointerEventData eventData)
+        => _shadow.SetActive(true);
+
+        public void OnPointerExit(PointerEventData eventData)
+        => _shadow.SetActive(false);
     }
 }
