@@ -7,7 +7,7 @@ namespace Assets.Src.Code.Rope
     {
         [SerializeField] private Knot[] _knot;
         [SerializeField] private SpriteRenderer _ropeSprite;
-        private int _collideCounter = 0;
+        public int CollideCounter { get; private set; }
 
         private void Start()
         {
@@ -21,18 +21,18 @@ namespace Assets.Src.Code.Rope
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.TryGetComponent(out Rope rope))
-                _collideCounter++;
+                CollideCounter++;
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision.TryGetComponent(out Rope rope))
-                _collideCounter--;
+                CollideCounter--;
         }
 
         private void OnEndDragRopeAction()
         {
-            if (_collideCounter == 0)
+            if (CollideCounter == 0)
                 _ropeSprite.sprite = RopeController.Instance.GreenRope;
             else _ropeSprite.sprite = RopeController.Instance.RedRope;
         }
