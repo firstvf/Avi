@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Src.Code.Controllers
 {
@@ -8,7 +7,7 @@ namespace Assets.Src.Code.Controllers
         public static SoundController Instance { get; private set; }
 
         [SerializeField] private AudioSource _audioSource;
-        [SerializeField] private AudioClip _click, _stretch;
+        [SerializeField] private AudioClip _click, _stretch, _win;
 
         private void Awake()
         {
@@ -24,5 +23,7 @@ namespace Assets.Src.Code.Controllers
         public void ClickSound() => _audioSource.PlayOneShot(_click);
 
         public void StretchSound() => _audioSource.PlayOneShot(_stretch);
+
+        public void WinSound(float volume) => _audioSource.PlayOneShot(_win, volume);
     }
 }

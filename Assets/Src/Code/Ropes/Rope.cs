@@ -1,7 +1,7 @@
 ﻿using Assets.Src.Code.Controllers;
 using UnityEngine;
 
-namespace Assets.Src.Code.Rope
+namespace Assets.Src.Code.Ropes
 {
     public class Rope : MonoBehaviour
     {
@@ -13,6 +13,8 @@ namespace Assets.Src.Code.Rope
         {
             for (int i = 0; i < _knot.Length; i++)
                 _knot[i].AddRopeToList(this);
+
+            LevelController.Instance.AddRopeToList(this);
 
             RopeController.Instance.OnRopeEndDragHandler += OnEndDragRopeAction;
             StretchRope();

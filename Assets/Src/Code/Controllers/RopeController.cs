@@ -24,7 +24,6 @@ namespace Assets.Src.Code.Controllers
 
         private void Start()
         {
-            FakeStart();
             Invoke(nameof(FakeStart), 0.05f);
         }
 
